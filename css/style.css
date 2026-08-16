@@ -517,3 +517,35 @@ body.dark .ripple-span {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* ===== VIEW TRANSITION (hiệu ứng loang nước đổi theme) ===== */
+/* Tắt hiệu ứng crossfade mặc định của trình duyệt để chỉ còn hiệu ứng
+   loang tròn (clip-path) mà utils.js điều khiển bằng JS */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+    z-index: 1;
+}
+::view-transition-new(root) {
+    z-index: 9999;
+}
+
+/* ===== BANNER GHI CHÚ GIAO HÀNG ===== */
+.notice-bar {
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.12), rgba(255, 101, 132, 0.12));
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+    font-size: 0.9rem;
+    color: var(--text);
+    text-align: center;
+}
+.notice-bar i {
+    color: var(--primary);
+    margin-right: 6px;
+}
+@media (max-width: 600px) {
+    .notice-bar { font-size: 0.8rem; padding: 8px 0; }
+}

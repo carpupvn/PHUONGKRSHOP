@@ -1,25 +1,4 @@
-// =========================================================================
-// MẬT KHẨU QUẢN TRỊ
-// -------------------------------------------------------------------------
-// Đây KHÔNG phải bảo mật thật sự vì đây là web tĩnh (không có server/backend).
-// Toàn bộ mã nguồn, kể cả file này, ai cũng xem được qua "View Page Source"
-// hoặc DevTools -> người rành kỹ thuật vẫn có thể bỏ qua màn hình này.
-// Mật khẩu chỉ để chặn người vô tình bấm nhầm vào trang quản lý, KHÔNG dùng
-// để bảo vệ dữ liệu thật sự nhạy cảm.
-//
-// CÁCH ĐỔI MẬT KHẨU:
-// 1. Mở Console trình duyệt (F12 -> tab Console) ở BẤT KỲ trang nào, chạy:
-//
-//      crypto.subtle.digest('SHA-256', new TextEncoder().encode('matkhaumoi'))
-//        .then(buf => console.log([...new Uint8Array(buf)]
-//          .map(b => b.toString(16).padStart(2, '0')).join('')));
-//
-//    (thay 'matkhaumoi' bằng mật khẩu bạn muốn đặt)
-// 2. Console sẽ in ra 1 chuỗi hex 64 ký tự -> copy chuỗi đó.
-// 3. Dán đè vào biến ADMIN_PASSWORD_HASH bên dưới, commit lại lên GitHub.
-// Mật khẩu mặc định hiện tại đang set là: admin123
-// =========================================================================
-const ADMIN_PASSWORD_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
+const ADMIN_PASSWORD_HASH = 'd006ab8a931eb6e1cab66f39dd804c345f0a02c34ea0445ab6e233b0bbf0c022';
 
 async function sha256(text) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));

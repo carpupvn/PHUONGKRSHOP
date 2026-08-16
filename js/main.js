@@ -96,8 +96,8 @@ function openModal(productId) {
             ${(product.images || []).map(img => `<img src="${img}" alt="ảnh phụ" onerror="this.style.display='none'" onclick="document.querySelector('.detail-img').src = this.src">`).join('')}
         </div>
         <div class="modal-actions">
-            <a href="${ZALO_LINK}" target="_blank" class="btn-contact btn-zalo"><i class="fas fa-comment-dots"></i> Chat Zalo</a>
-            <a href="https://www.facebook.com/phuong.doan.9619934" target="_blank" class="btn-contact btn-fb"><i class="fab fa-facebook"></i> Nhắn tin</a>
+            <a href="${ZALO_LINK}" target="_blank" class="btn-contact btn-zalo" data-inquiry="${escapeAttr(product.name)}"><i class="fas fa-comment-dots"></i> Chat Zalo</a>
+            <a href="${FB_LINK}" target="_blank" class="btn-contact btn-fb" data-inquiry="${escapeAttr(product.name)}"><i class="fab fa-facebook"></i> Nhắn tin</a>
         </div>
     `;
     modalBody.innerHTML = html;
