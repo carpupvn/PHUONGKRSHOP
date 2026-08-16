@@ -29,25 +29,21 @@
         .form-group label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 0.95rem; }
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; background: var(--bg-card); color: var(--text); }
         .cropper-container { max-width: 500px; margin: 15px auto; }
-        .password-screen { display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; background: var(--bg); padding: 20px; }
-        .password-screen .box { background: var(--bg-card); padding: 30px 40px; border-radius: 16px; box-shadow: var(--shadow); text-align: center; max-width: 400px; width: 100%; }
-        .password-screen input { padding: 10px 16px; width: 100%; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: var(--bg-card); color: var(--text); }
-        .password-screen .error { color: red; margin-top: 10px; }
         @media (max-width: 600px) {
-            .password-screen .box { padding: 20px; }
+            .password-modal { padding: 24px 20px; }
             .product-list { grid-template-columns: 1fr; }
             .admin-header .btn { font-size: 0.85rem; padding: 6px 12px; }
         }
     </style>
 </head>
 <body>
-    <!-- Màn hình nhập mật khẩu -->
-    <div id="passwordScreen" class="password-screen">
-        <div class="box">
+    <!-- Popup nhập mật khẩu -->
+    <div id="passwordScreen" class="modal" style="display:flex;">
+        <div class="password-modal">
+            <button type="button" id="closePasswordBtn" class="modal-close-btn" title="Đóng">&times;</button>
             <h2>🔐 Quản lý sản phẩm</h2>
             <p>Vui lòng nhập mật khẩu</p>
-            <input type="password" id="passwordInput" placeholder="Mật khẩu..." />
-            <br><br>
+            <input type="password" id="passwordInput" placeholder="Mật khẩu..." autocomplete="current-password" autofocus />
             <button class="btn btn-primary" onclick="checkPassword()">Xác nhận</button>
             <div id="loginError" class="error"></div>
         </div>
@@ -60,7 +56,7 @@
                 <h1 class="logo">📋 Quản lý sản phẩm</h1>
                 <div style="display:flex; gap:10px; align-items:center;">
                     <button id="themeToggleAdmin" class="icon-btn"><i class="fas fa-moon"></i></button>
-                    <a href="index.html" class="admin-link"><i class="fas fa-home"></i> Về trang chủ</a>
+                    <a href="./" class="admin-link"><i class="fas fa-home"></i> Về trang chủ</a>
                 </div>
             </div>
         </header>

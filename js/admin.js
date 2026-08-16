@@ -30,6 +30,11 @@ document.getElementById('passwordInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') checkPassword();
 });
 
+// Nút "x" trên popup mật khẩu -> quay lại trang chủ
+document.getElementById('closePasswordBtn').addEventListener('click', () => {
+    window.location.href = './';
+});
+
 if (sessionStorage.getItem('adminAuthed') === '1') {
     showAdmin();
 }

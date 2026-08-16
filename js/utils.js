@@ -110,7 +110,7 @@ function escapeAttr(str) {
 }
 
 function buildInquiryMessage(productName) {
-    return `Chào shop, mình đang quan tâm sản phẩm "${productName}", shop tư vấn giúp mình với ạ!`;
+    return `Chủ shop ơi, mình đang quan tâm sản phẩm "${productName}", shop tư vấn giúp mình với ạ!`;
 }
 
 function showToast(text) {
