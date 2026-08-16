@@ -1,24 +1,31 @@
 [
   {
     "id": "sp001",
-    "name": "Kem dưỡng ẩm sâu ABC",
-    "category": "Mỹ phẩm",
-    "description": "Kem dưỡng ẩm chuyên sâu cho da khô, thành phần từ thiên nhiên, không gây kích ứng.",
+    "name": "Sữa Tắm Happy Bath Body Wash 900G",
+    "category": "Chăm sóc da",
+    "description": "Công dụng chính: làm sạch thơm làn da, duy trì độ ẩm mịn, chống oxi hóa và đàn hồi làn da\nThành phần: Chiết xuất Aloe hữu cơ, chiết xuất 95% từ hoa oải hương và tảo biển.\nSữa Tắm Happy Bath Essence Body Wash chứa chiết xuất 95% từ thiên nhiên, các loại hoa tươi, tảo biển… làm mịn sạch và cho bạn làn da bóng mượt. Bên cạnh đó, chiết xuất từ tinh chất hương hoa tạo mùi hương nhẹ nhàng quyến rũ.\nCông dụng:\nLàm sạch mịn và giúp da bóng mượt\nHương hoa sảng khoái\nSản phẩm tạo bọt mịn giúp làm sạch da hiệu quả\nsẵn hàng",
     "price": 250000,
     "originalPrice": 300000,
-    "stock": 50,
+    "stock": 0,
     "mainImage": "products/sp001.jpg",
-    "images": ["products/sp001_1.jpg", "products/sp001_2.jpg"]
+    "images": [
+      "a"
+    ]
   },
   {
     "id": "sp002",
-    "name": "Viên uống Omega-3 1000mg",
+    "name": "SÂM HÀN QUỐC 6 NĂM TUỔI",
     "category": "Thực phẩm chức năng",
-    "description": "Bổ sung Omega-3, tốt cho tim mạch và trí não.",
-    "price": 450000,
-    "originalPrice": 450000,
-    "stock": 0,
+    "description": "✔ Nhân sâm có tác dụng giúp giảm căng thẳng.\n✔ Giúp cải thiện sức khỏe tim mạch.\n✔ Bồi bổ sức khỏe, cải thiện hiện tượng lao tâm lao lực quá sức.\n✔ Có tác dụng làm đẹp cho các chị em phụ nữ.\n✔ Tăng cường trí nhớ.\n✔ Tăng cường chức năng sinh lý cho cả nam và nữ.\n✔ Hỗ trợ điều trị bệnh về đường.\n✔ Tăng cường chức năng gan.\n✔ Hỗ trợ điều trị khối u.",
+    "price": 1000000,
+    "originalPrice": 20000000,
+    "stock": 20000,
     "mainImage": "products/sp002.jpg",
-    "images": []
+    "images": [
+      "products/sp002_1.jpg",
+      "products/sp002_2.jpg",
+      "products/sp002_3.jpg",
+      "products/sp002_4.jpg"
+    ]
   }
 ]

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>Quản lý sản phẩm</title>
+    <title>PHUONGKRSHOP - Quản lý</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="libs/cropper.min.css" />
     <link rel="stylesheet" href="css/style.css" />
@@ -113,8 +113,17 @@
                     <input type="text" id="editImages" placeholder="products/sp001_1.jpg, products/sp001_2.jpg" />
                 </div>
                 <div class="form-group">
-                    <label>Chọn ảnh để crop (sẽ tự đặt tên theo mã sản phẩm)</label>
-                    <input type="file" id="imageUpload" accept="image/*" />
+                    <label>Ảnh sản phẩm (crop rồi tự tải về, tự đặt tên theo mã SP)</label>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <label class="btn btn-primary upload-label">
+                            <i class="fas fa-image"></i> Thay ảnh chính
+                            <input type="file" id="mainImageUpload" accept="image/*" />
+                        </label>
+                        <label class="btn btn-secondary upload-label">
+                            <i class="fas fa-images"></i> Thêm ảnh phụ
+                            <input type="file" id="subImageUpload" accept="image/*" />
+                        </label>
+                    </div>
                 </div>
                 <div id="cropContainer" style="display:none;" class="cropper-container">
                     <img id="cropImage" src="" alt="Crop image" />
@@ -133,7 +142,7 @@
                 <div class="footer-info">
                     <p><strong>Liên hệ mẹ:</strong> <a href="https://www.facebook.com/phuong.doan.9619934" target="_blank">Facebook</a> | <a href="tel:0913326354">0913 326 354</a></p>
                     <p><strong>Liên hệ người làm web:</strong> <a href="https://www.facebook.com/ngocphuocccccc/" target="_blank">Facebook</a> | <a href="tel:0826422984">0826 422 984</a></p>
-                    <p class="copyright">&copy; 2026 Cửa hàng Mẹ. Thiết kế bởi Ngọc Phước.</p>
+                    <p class="copyright">&copy; 2026 Phượng KR Shop. Thiết kế bởi Ngọc Phước.</p>
                 </div>
             </div>
         </footer>
@@ -141,6 +150,7 @@
 
     <script src="libs/cropper.min.js"></script>
     <script src="libs/FileSaver.min.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/admin.js"></script>
 </body>
 </html>

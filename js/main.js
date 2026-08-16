@@ -1,46 +1,5 @@
-// ====== Chuyển đổi theme (hiệu ứng loang nước) ======
-const themeToggle = document.getElementById('themeToggle');
-const currentTheme = localStorage.getItem('theme') || 'light';
-document.body.classList.toggle('dark', currentTheme === 'dark');
-themeToggle.innerHTML = currentTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-
-themeToggle.addEventListener('click', function(e) {
-    const isDark = document.body.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    // Hiệu ứng loang nước
-    const ripple = document.createElement('div');
-    ripple.style.cssText = `
-        position: fixed;
-        top: 50%; left: 50%;
-        width: 0; height: 0;
-        border-radius: 50%;
-        background: ${isDark ? '#1a1a1a' : '#f4f6fc'};
-        transform: translate(-50%, -50%) scale(0);
-        z-index: 9999;
-        pointer-events: none;
-        transition: none;
-    `;
-    document.body.appendChild(ripple);
-    const size = Math.max(window.innerWidth, window.innerHeight) * 2;
-    ripple.style.transition = 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-    requestAnimationFrame(() => {
-        ripple.style.transform = `translate(-50%, -50%) scale(${size})`;
-    });
-    setTimeout(() => {
-        ripple.remove();
-    }, 700);
-    this.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-});
-
-// ====== Ảnh placeholder khi lỗi (SVG nhúng sẵn, không phụ thuộc dịch vụ ngoài) ======
-// via.placeholder.com đã ngừng hoạt động ổn định nên không dùng nữa.
-function placeholderSvg(text, w, h) {
-    return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" fill="#e2e8f0"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="#6b6b80" text-anchor="middle" dy=".3em">${text}</text></svg>`
-    );
-}
-const NO_IMAGE_CARD = placeholderSvg('Không có ảnh', 300, 200);
-const NO_IMAGE_DETAIL = placeholderSvg('Không có ảnh', 500, 400);
+// ====== Theme toggle (dùng chung từ utils.js) ======
+initThemeToggle('themeToggle');
 
 // ====== Đọc dữ liệu sản phẩm ======
 const PRODUCTS_URL = 'https://raw.githubusercontent.com/carpupvn/PHUONGKRSHOP/main/data/products.json';
@@ -111,7 +70,7 @@ function formatCurrency(amount) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 }
 
-// ====== Modal chi tiết (cập nhật) ======
+// ====== Modal chi tiết ======
 const modal = document.getElementById('productModal');
 const modalBody = document.getElementById('modalBody');
 const closeModal = document.querySelector('.close-modal');
@@ -137,7 +96,7 @@ function openModal(productId) {
             ${(product.images || []).map(img => `<img src="${img}" alt="ảnh phụ" onerror="this.style.display='none'" onclick="document.querySelector('.detail-img').src = this.src">`).join('')}
         </div>
         <div class="modal-actions">
-            <a href="tel:0913326354" class="btn-contact btn-phone"><i class="fas fa-phone"></i> Gọi ngay</a>
+            <a href="${ZALO_LINK}" target="_blank" class="btn-contact btn-zalo"><i class="fas fa-comment-dots"></i> Chat Zalo</a>
             <a href="https://www.facebook.com/phuong.doan.9619934" target="_blank" class="btn-contact btn-fb"><i class="fab fa-facebook"></i> Nhắn tin</a>
         </div>
     `;

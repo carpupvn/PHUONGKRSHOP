@@ -47,50 +47,16 @@ function showAdmin() {
     loadProducts();
 }
 
-// Cho phép nhấn Enter để đăng nhập
 document.getElementById('passwordInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') checkPassword();
 });
 
-// Nếu đã đăng nhập trong phiên này rồi thì khỏi hỏi lại mật khẩu
 if (sessionStorage.getItem('adminAuthed') === '1') {
     showAdmin();
 }
 
-// ====== Chuyển đổi theme (hiệu ứng loang nước) ======
-const themeToggleAdmin = document.getElementById('themeToggleAdmin');
-const currentTheme = localStorage.getItem('theme') || 'light';
-document.body.classList.toggle('dark', currentTheme === 'dark');
-themeToggleAdmin.innerHTML = currentTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-
-themeToggleAdmin.addEventListener('click', function () {
-    const isDark = document.body.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    const bgColor = getComputedStyle(document.body).getPropertyValue('--bg').trim();
-    const ripple = document.createElement('div');
-    ripple.style.cssText = `
-        position: fixed;
-        top: 50%; left: 50%;
-        width: 0; height: 0;
-        border-radius: 50%;
-        background: ${bgColor || (isDark ? '#12121a' : '#f4f6fc')};
-        transform: translate(-50%, -50%) scale(0);
-        z-index: 9999;
-        pointer-events: none;
-        transition: none;
-    `;
-    document.body.appendChild(ripple);
-    const size = Math.max(window.innerWidth, window.innerHeight) * 2;
-    ripple.style.transition = 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-    requestAnimationFrame(() => { ripple.style.transform = `translate(-50%, -50%) scale(${size})`; });
-    setTimeout(() => ripple.remove(), 700);
-    this.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-});
-
-// ====== Ảnh placeholder khi lỗi (không phụ thuộc dịch vụ ngoài) ======
-const NO_IMAGE_SVG = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200"><rect width="100%" height="100%" fill="#e2e8f0"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="#6b6b80" text-anchor="middle" dy=".3em">Không có ảnh</text></svg>`
-);
+// ====== Theme toggle (dùng chung từ utils.js) ======
+initThemeToggle('themeToggleAdmin');
 
 // ====== Đọc dữ liệu sản phẩm ======
 const PRODUCTS_URL = 'https://raw.githubusercontent.com/carpupvn/PHUONGKRSHOP/main/data/products.json';
@@ -119,7 +85,9 @@ function renderProductList() {
     window.productsData.forEach(p => {
         const item = document.createElement('div');
         item.className = 'product-item';
+        const imgSrc = p.mainImage && p.mainImage.trim() !== '' ? p.mainImage : NO_IMAGE_CARD;
         item.innerHTML = `
+            <img class="thumb" src="${imgSrc}" alt="${p.name}" onerror="this.onerror=null;this.src='${NO_IMAGE_CARD}'">
             <strong>${p.name}</strong><br>
             <small>${p.id} • ${p.category || 'Không danh mục'}</small><br>
             <span>${formatCurrency(p.price)}</span>
@@ -147,6 +115,12 @@ function generateNextId() {
     return 'sp' + String(next).padStart(3, '0');
 }
 
+function resetImageInputs() {
+    document.getElementById('mainImageUpload').value = '';
+    document.getElementById('subImageUpload').value = '';
+    closeCrop();
+}
+
 function showAddForm() {
     document.getElementById('formTitle').textContent = 'Thêm sản phẩm';
     document.getElementById('editId').value = generateNextId();
@@ -158,8 +132,7 @@ function showAddForm() {
     document.getElementById('editStock').value = '';
     document.getElementById('editMainImage').value = '';
     document.getElementById('editImages').value = '';
-    document.getElementById('imageUpload').value = '';
-    closeCrop();
+    resetImageInputs();
     document.getElementById('editForm').style.display = 'block';
     document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
 }
@@ -177,15 +150,14 @@ function editProduct(id) {
     document.getElementById('editStock').value = p.stock ?? '';
     document.getElementById('editMainImage').value = p.mainImage || '';
     document.getElementById('editImages').value = (p.images || []).join(', ');
-    document.getElementById('imageUpload').value = '';
-    closeCrop();
+    resetImageInputs();
     document.getElementById('editForm').style.display = 'block';
     document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
 }
 
 function cancelEdit() {
     document.getElementById('editForm').style.display = 'none';
-    closeCrop();
+    resetImageInputs();
 }
 
 function saveProduct() {
@@ -212,7 +184,6 @@ function saveProduct() {
         price,
         originalPrice,
         stock,
-        // Nếu để trống ô ảnh khi đang sửa -> giữ nguyên ảnh cũ
         mainImage: mainImageInput || (existing ? existing.mainImage : ''),
         images: imagesInput
             ? imagesInput.split(',').map(s => s.trim()).filter(Boolean)
@@ -243,17 +214,19 @@ function exportJSON() {
     alert('Đã tải products.json.\nHãy vào GitHub -> data/products.json -> Edit -> dán/thay nội dung file này rồi Commit.');
 }
 
-// ====== Crop ảnh ======
+// ====== Crop ảnh: 2 nút riêng biệt cho ảnh chính và ảnh phụ ======
 let cropper = null;
+let cropTarget = null; // 'main' hoặc 'sub'
 
-document.getElementById('imageUpload').addEventListener('change', function (e) {
-    const file = e.target.files[0];
+function startCrop(file, target) {
     if (!file) return;
+    cropTarget = target;
     const reader = new FileReader();
     reader.onload = function (evt) {
         const img = document.getElementById('cropImage');
         img.src = evt.target.result;
         document.getElementById('cropContainer').style.display = 'block';
+        document.getElementById('cropContainer').scrollIntoView({ behavior: 'smooth' });
         if (cropper) cropper.destroy();
         cropper = new Cropper(img, {
             aspectRatio: 1, // ảnh sản phẩm vuông; đổi thành NaN nếu muốn crop tự do
@@ -262,6 +235,13 @@ document.getElementById('imageUpload').addEventListener('change', function (e) {
         });
     };
     reader.readAsDataURL(file);
+}
+
+document.getElementById('mainImageUpload').addEventListener('change', function (e) {
+    startCrop(e.target.files[0], 'main');
+});
+document.getElementById('subImageUpload').addEventListener('change', function (e) {
+    startCrop(e.target.files[0], 'sub');
 });
 
 function cropAndDownload() {
@@ -269,12 +249,10 @@ function cropAndDownload() {
     const canvas = cropper.getCroppedCanvas({ width: 800, height: 800 });
     canvas.toBlob(function (blob) {
         const id = document.getElementById('editId').value.trim() || generateNextId();
-        // Đếm xem đây là ảnh chính hay ảnh phụ dựa vào việc ô "Ảnh chính" đã có giá trị chưa
-        const mainImageField = document.getElementById('editMainImage');
         let filename;
-        if (!mainImageField.value.trim()) {
+        if (cropTarget === 'main') {
             filename = `${id}.jpg`;
-            mainImageField.value = `products/${filename}`;
+            document.getElementById('editMainImage').value = `products/${filename}`;
         } else {
             const imagesField = document.getElementById('editImages');
             const current = imagesField.value.trim() ? imagesField.value.split(',').map(s => s.trim()).filter(Boolean) : [];
@@ -286,6 +264,7 @@ function cropAndDownload() {
         saveAs(blob, filename);
         alert(`Đã tải ảnh "${filename}".\nNhớ upload ảnh này vào thư mục products/ trên GitHub.`);
         closeCrop();
+        resetImageInputs();
     }, 'image/jpeg', 0.9);
 }
 
@@ -294,6 +273,9 @@ function closeCrop() {
         cropper.destroy();
         cropper = null;
     }
-    document.getElementById('cropContainer').style.display = 'none';
-    document.getElementById('cropImage').src = '';
+    cropTarget = null;
+    const container = document.getElementById('cropContainer');
+    if (container) container.style.display = 'none';
+    const img = document.getElementById('cropImage');
+    if (img) img.src = '';
 }
