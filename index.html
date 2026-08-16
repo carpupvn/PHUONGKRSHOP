@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Cửa hàng mẹ tôi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <h1 class="logo">🛍️ Cửa hàng Mẹ</h1>
+            <div class="header-actions">
+                <button id="themeToggle" class="icon-btn" title="Chuyển đổi theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="admin.html" class="admin-link"><i class="fas fa-cog"></i> Quản lý</a>
+            </div>
+        </div>
+        <!-- Thông tin liên hệ mẹ (hiển thị trên mobile thì nhỏ gọn) -->
+        <div class="container contact-bar">
+            <a href="https://www.facebook.com/phuong.doan.9619934" target="_blank" class="contact-link"><i class="fab fa-facebook"></i> Phương Doan</a>
+            <a href="tel:0913326354" class="contact-link"><i class="fas fa-phone"></i> 0913 326 354</a>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="container">
+        <div id="productGrid" class="product-grid">
+            <!-- Sản phẩm sẽ được JS render -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-info">
+                <p><strong>Liên hệ mẹ:</strong> <a href="https://www.facebook.com/phuong.doan.9619934" target="_blank">Facebook</a> | <a href="tel:0913326354">0913 326 354</a></p>
+                <p><strong>Liên hệ người làm web:</strong> <a href="https://www.facebook.com/ngocphuocccccc/" target="_blank">Facebook</a> | <a href="tel:0826422984">0826 422 984</a></p>
+                <p class="copyright">&copy; 2026 Cửa hàng Mẹ. Thiết kế bởi Ngọc Phước.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal chi tiết sản phẩm -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

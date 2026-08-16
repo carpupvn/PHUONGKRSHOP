@@ -1,0 +1,137 @@
+// ====== Chuyển đổi theme (hiệu ứng loang nước) ======
+const themeToggle = document.getElementById('themeToggle');
+const currentTheme = localStorage.getItem('theme') || 'light';
+document.body.classList.toggle('dark', currentTheme === 'dark');
+themeToggle.innerHTML = currentTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+
+themeToggle.addEventListener('click', function(e) {
+    const isDark = document.body.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    // Hiệu ứng loang nước
+    const ripple = document.createElement('div');
+    ripple.style.cssText = `
+        position: fixed;
+        top: 50%; left: 50%;
+        width: 0; height: 0;
+        border-radius: 50%;
+        background: ${isDark ? '#1a1a1a' : '#f9f9f9'};
+        transform: translate(-50%, -50%) scale(0);
+        z-index: 9999;
+        pointer-events: none;
+        transition: none;
+    `;
+    document.body.appendChild(ripple);
+    const size = Math.max(window.innerWidth, window.innerHeight) * 2;
+    ripple.style.transition = 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    requestAnimationFrame(() => {
+        ripple.style.transform = `translate(-50%, -50%) scale(${size})`;
+    });
+    setTimeout(() => {
+        ripple.remove();
+    }, 700);
+    this.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+});
+
+// ====== Đọc dữ liệu sản phẩm ======
+const PRODUCTS_URL = 'https://raw.githubusercontent.com/carpupvn/PHUONGKRSHOP/main/data/products.json';
+
+async function loadProducts() {
+    try {
+        const response = await fetch(PRODUCTS_URL);
+        if (!response.ok) throw new Error('Không thể tải dữ liệu');
+        const products = await response.json();
+        if (!products || products.length === 0) {
+            document.getElementById('productGrid').innerHTML = `
+                <div class="no-products"><i class="fas fa-box-open"></i> Chưa có sản phẩm nào</div>
+            `;
+            return;
+        }
+        renderProducts(products);
+        window.productsData = products;
+    } catch (error) {
+        document.getElementById('productGrid').innerHTML = `
+            <div class="no-products"><i class="fas fa-exclamation-triangle"></i> Lỗi tải sản phẩm: ${error.message}</div>
+        `;
+    }
+}
+
+function renderProducts(products) {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = '';
+    products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.dataset.id = p.id;
+        // Xử lý giá
+        let priceHtml = '';
+        const hasDiscount = p.originalPrice > p.price;
+        const discountPercent = hasDiscount ? Math.round((1 - p.price/p.originalPrice) * 100) : 0;
+        if (hasDiscount) {
+            priceHtml = `
+                <span class="original">${formatCurrency(p.originalPrice)}</span>
+                <span>${formatCurrency(p.price)}</span>
+                <span class="discount-badge">-${discountPercent}%</span>
+            `;
+        } else {
+            priceHtml = `<span>${formatCurrency(p.price)}</span>`;
+        }
+        // Trạng thái tồn kho
+        const stockClass = p.stock === 0 ? 'out-of-stock' : '';
+        const stockText = p.stock === 0 ? '🛒 Cần đặt trước' : `Còn ${p.stock} sản phẩm`;
+
+        // Xử lý ảnh main
+        let imgSrc = p.mainImage && p.mainImage.trim() !== '' ? p.mainImage : '';
+        const imgTag = imgSrc ? `<img class="main-img" src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">` :
+            `<div class="no-image" style="height:180px;display:flex;align-items:center;justify-content:center;background:#f0f0f0;color:#aaa;"><i class="fas fa-image" style="font-size:2rem;"></i></div>`;
+
+        card.innerHTML = `
+            ${imgTag}
+            <div class="product-info">
+                <div class="product-name">${p.name}</div>
+                <div class="product-price">${priceHtml}</div>
+                <div class="product-stock ${stockClass}">${stockText}</div>
+            </div>
+        `;
+        card.addEventListener('click', () => openModal(p.id));
+        grid.appendChild(card);
+    });
+}
+
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+}
+
+// ====== Modal chi tiết ======
+const modal = document.getElementById('productModal');
+const modalBody = document.getElementById('modalBody');
+const closeModal = document.querySelector('.close-modal');
+
+function openModal(productId) {
+    const product = window.productsData.find(p => p.id === productId);
+    if (!product) return;
+    let html = `
+        <img class="detail-img" src="${product.mainImage || 'https://via.placeholder.com/500x400?text=No+Image'}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/500x400?text=No+Image'">
+        <h2>${product.name}</h2>
+        <p><strong>Danh mục:</strong> ${product.category || 'Không có'}</p>
+        <p>${product.description || ''}</p>
+        <div style="font-size:1.2rem; margin:10px 0;">
+            ${product.originalPrice > product.price ? `<span style="text-decoration:line-through;color:#888;margin-right:12px;">${formatCurrency(product.originalPrice)}</span>` : ''}
+            <strong style="color:#e74c3c;">${formatCurrency(product.price)}</strong>
+            ${product.originalPrice > product.price ? `<span class="discount-badge" style="background:#e74c3c;color:white;padding:2px 10px;border-radius:20px;font-size:0.9rem;margin-left:10px;">-${Math.round((1 - product.price/product.originalPrice) * 100)}%</span>` : ''}
+        </div>
+        <div>${product.stock === 0 ? '🛒 Cần đặt trước' : `Còn ${product.stock} sản phẩm`}</div>
+        <div class="thumbnails">
+            ${(product.images || []).map(img => `<img src="${img}" alt="ảnh phụ" onerror="this.style.display='none'" onclick="document.querySelector('.detail-img').src = this.src">`).join('')}
+        </div>
+        <button onclick="window.location.href='tel:0913326354'" style="margin-top:15px;padding:10px 20px;background:#25D366;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;"><i class="fab fa-whatsapp"></i> Gọi ngay</button>
+        <button onclick="window.location.href='https://www.facebook.com/phuong.doan.9619934'" style="margin-top:15px;margin-left:10px;padding:10px 20px;background:#1877f2;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;"><i class="fab fa-facebook"></i> Nhắn tin</button>
+    `;
+    modalBody.innerHTML = html;
+    modal.style.display = 'flex';
+}
+
+closeModal.addEventListener('click', () => modal.style.display = 'none');
+window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+
+// ====== Khởi tạo ======
+loadProducts();

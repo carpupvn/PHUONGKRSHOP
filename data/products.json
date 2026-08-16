@@ -1,0 +1,24 @@
+[
+  {
+    "id": "sp001",
+    "name": "Kem dưỡng ẩm sâu ABC",
+    "category": "Mỹ phẩm",
+    "description": "Kem dưỡng ẩm chuyên sâu cho da khô, thành phần từ thiên nhiên, không gây kích ứng.",
+    "price": 250000,
+    "originalPrice": 300000,
+    "stock": 50,
+    "mainImage": "products/sp001.jpg",
+    "images": ["products/sp001_1.jpg", "products/sp001_2.jpg"]
+  },
+  {
+    "id": "sp002",
+    "name": "Viên uống Omega-3 1000mg",
+    "category": "Thực phẩm chức năng",
+    "description": "Bổ sung Omega-3, tốt cho tim mạch và trí não.",
+    "price": 450000,
+    "originalPrice": 450000,
+    "stock": 0,
+    "mainImage": "products/sp002.jpg",
+    "images": []
+  }
+]
