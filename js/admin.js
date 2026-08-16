@@ -1,7 +1,7 @@
 // ====== Cấu hình mật khẩu (dùng Web Crypto API) ======
+// ====== Cấu hình mật khẩu (dùng Web Crypto API) ======
 const SALT = "LuyenGoTiengViet";
-const PASSWORD_HASH = "a0a94fdbbfd4d501c3016aae5e261cda27a66f9c16ccb004631b809a81560adf"; // "cocaimatkhaucungkhongbiet" + salt
-
+const PASSWORD_HASH = "69f08b897fbedae7aab04ecb620ca132e6441547f3b0b9144e5b98ffd4ae3951";
 async function sha256WithSalt(message, salt) {
     const encoder = new TextEncoder();
     const data = encoder.encode(message + salt);
