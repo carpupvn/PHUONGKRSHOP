@@ -32,6 +32,16 @@ themeToggle.addEventListener('click', function(e) {
     this.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
 });
 
+// ====== Ảnh placeholder khi lỗi (SVG nhúng sẵn, không phụ thuộc dịch vụ ngoài) ======
+// via.placeholder.com đã ngừng hoạt động ổn định nên không dùng nữa.
+function placeholderSvg(text, w, h) {
+    return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" fill="#e2e8f0"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="#6b6b80" text-anchor="middle" dy=".3em">${text}</text></svg>`
+    );
+}
+const NO_IMAGE_CARD = placeholderSvg('Không có ảnh', 300, 200);
+const NO_IMAGE_DETAIL = placeholderSvg('Không có ảnh', 500, 400);
+
 // ====== Đọc dữ liệu sản phẩm ======
 const PRODUCTS_URL = 'https://raw.githubusercontent.com/carpupvn/PHUONGKRSHOP/main/data/products.json';
 
@@ -81,7 +91,7 @@ function renderProducts(products) {
 
         // Xử lý ảnh main
         let imgSrc = p.mainImage && p.mainImage.trim() !== '' ? p.mainImage : '';
-        const imgTag = imgSrc ? `<img class="main-img" src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">` :
+        const imgTag = imgSrc ? `<img class="main-img" src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='${NO_IMAGE_CARD}'">` :
             `<div class="no-image" style="height:180px;display:flex;align-items:center;justify-content:center;background:var(--border);color:var(--text-light);"><i class="fas fa-image" style="font-size:2rem;"></i></div>`;
 
         card.innerHTML = `
@@ -110,7 +120,7 @@ function openModal(productId) {
     const product = window.productsData.find(p => p.id === productId);
     if (!product) return;
     let html = `
-        <img class="detail-img" src="${product.mainImage || 'https://via.placeholder.com/500x400?text=No+Image'}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/500x400?text=No+Image'">
+        <img class="detail-img" src="${product.mainImage || NO_IMAGE_DETAIL}" alt="${product.name}" onerror="this.onerror=null;this.src='${NO_IMAGE_DETAIL}'">
         <h2>${product.name}</h2>
         <div class="category"><i class="fas fa-tag"></i> ${product.category || 'Không có danh mục'}</div>
         <div class="description">${product.description || ''}</div>
