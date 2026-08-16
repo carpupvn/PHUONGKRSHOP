@@ -1,9 +1,8 @@
-const ADMIN_PASSWORD_HASH = 'd006ab8a931eb6e1cab66f39dd804c345f0a02c34ea0445ab6e233b0bbf0c022';
-
-async function sha256(text) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
-}
+// ĐẶT TRƯỚC TIÊN: PRODUCTS_URL phải được khởi tạo trước vì đoạn code phía dưới
+// (kiểm tra sessionStorage) có thể gọi loadProducts() ngay khi script chạy lần
+// đầu -> nếu khai báo const này ở cuối file sẽ bị lỗi
+// "Cannot access 'PRODUCTS_URL' before initialization" (temporal dead zone).
+const PRODUCTS_URL = 'https://raw.githubusercontent.com/carpupvn/PHUONGKRSHOP/main/data/products.json';
 
 async function checkPassword() {
     const input = document.getElementById('passwordInput');
@@ -43,8 +42,6 @@ if (sessionStorage.getItem('adminAuthed') === '1') {
 initThemeToggle('themeToggleAdmin');
 
 // ====== Đọc dữ liệu sản phẩm ======
-const PRODUCTS_URL = 'https://raw.githubusercontent.com/carpupvn/PHUONGKRSHOP/main/data/products.json';
-
 async function loadProducts() {
     const list = document.getElementById('productList');
     try {

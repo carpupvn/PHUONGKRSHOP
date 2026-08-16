@@ -21,6 +21,14 @@ const FB_WEB_LINK = 'https://www.facebook.com/ngocphuocccccc/'; // Facebook ngư
 const PHONE_DISPLAY = '0913 326 354';
 const PHONE_TEL = 'tel:0913326354';
 
+// ---- Xác thực quản lý (dùng chung cho index.html và admin.html) ----
+const ADMIN_PASSWORD_HASH = 'd006ab8a931eb6e1cab66f39dd804c345f0a02c34ea0445ab6e233b0bbf0c022';
+
+async function sha256(text) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 // =========================================================================
 // THEME TOGGLE — hiệu ứng loang nước (view transition) xuất phát từ nút bấm
 // =========================================================================

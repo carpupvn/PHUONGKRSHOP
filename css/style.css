@@ -533,6 +533,18 @@ body.dark .ripple-span {
     z-index: 9999;
 }
 
+/* ===== NÚT DÙNG CHUNG (Ví dụ: popup mật khẩu trên trang chủ) ===== */
+.btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+.btn-primary { background: #3498db; color: #fff; }
+.btn-primary:hover { background: #2980b9; }
+
 /* ===== POPUP NHẬP MẬT KHẨU (ADMIN) ===== */
 .password-modal {
     background: var(--bg-card);

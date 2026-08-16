@@ -107,5 +107,49 @@ function openModal(productId) {
 closeModal.addEventListener('click', () => modal.style.display = 'none');
 window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
 
+// ====== Popup mật khẩu quản lý (mở ngay trên trang chủ, không chuyển trang) ======
+const passwordScreen = document.getElementById('passwordScreen');
+const adminLink = document.getElementById('adminLink');
+const passwordInput = document.getElementById('passwordInput');
+const loginError = document.getElementById('loginError');
+
+function openPasswordPopup() {
+    loginError.textContent = '';
+    passwordInput.value = '';
+    passwordScreen.style.display = 'flex';
+    passwordInput.focus();
+}
+
+function closePasswordPopup() {
+    passwordScreen.style.display = 'none';
+}
+
+adminLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    openPasswordPopup();
+});
+
+document.getElementById('closePasswordBtn').addEventListener('click', closePasswordPopup);
+
+passwordScreen.addEventListener('click', (e) => {
+    if (e.target === passwordScreen) closePasswordPopup();
+});
+
+passwordInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkPasswordIndex();
+});
+
+async function checkPasswordIndex() {
+    const hash = await sha256(passwordInput.value);
+    if (hash === ADMIN_PASSWORD_HASH) {
+        sessionStorage.setItem('adminAuthed', '1'); // admin.html sẽ đọc cờ này và vào thẳng, không hỏi lại mật khẩu
+        window.location.href = 'admin.html';
+    } else {
+        loginError.textContent = 'Sai mật khẩu, vui lòng thử lại.';
+        passwordInput.value = '';
+        passwordInput.focus();
+    }
+}
+
 // ====== Khởi tạo ======
 loadProducts();
