@@ -14,7 +14,7 @@ themeToggle.addEventListener('click', function(e) {
         top: 50%; left: 50%;
         width: 0; height: 0;
         border-radius: 50%;
-        background: ${isDark ? '#1a1a1a' : '#f9f9f9'};
+        background: ${isDark ? '#1a1a1a' : '#f4f6fc'};
         transform: translate(-50%, -50%) scale(0);
         z-index: 9999;
         pointer-events: none;
@@ -82,7 +82,7 @@ function renderProducts(products) {
         // Xử lý ảnh main
         let imgSrc = p.mainImage && p.mainImage.trim() !== '' ? p.mainImage : '';
         const imgTag = imgSrc ? `<img class="main-img" src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">` :
-            `<div class="no-image" style="height:180px;display:flex;align-items:center;justify-content:center;background:#f0f0f0;color:#aaa;"><i class="fas fa-image" style="font-size:2rem;"></i></div>`;
+            `<div class="no-image" style="height:180px;display:flex;align-items:center;justify-content:center;background:var(--border);color:var(--text-light);"><i class="fas fa-image" style="font-size:2rem;"></i></div>`;
 
         card.innerHTML = `
             ${imgTag}
@@ -101,7 +101,7 @@ function formatCurrency(amount) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 }
 
-// ====== Modal chi tiết ======
+// ====== Modal chi tiết (cập nhật) ======
 const modal = document.getElementById('productModal');
 const modalBody = document.getElementById('modalBody');
 const closeModal = document.querySelector('.close-modal');
@@ -112,19 +112,24 @@ function openModal(productId) {
     let html = `
         <img class="detail-img" src="${product.mainImage || 'https://via.placeholder.com/500x400?text=No+Image'}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/500x400?text=No+Image'">
         <h2>${product.name}</h2>
-        <p><strong>Danh mục:</strong> ${product.category || 'Không có'}</p>
-        <p>${product.description || ''}</p>
-        <div style="font-size:1.2rem; margin:10px 0;">
-            ${product.originalPrice > product.price ? `<span style="text-decoration:line-through;color:#888;margin-right:12px;">${formatCurrency(product.originalPrice)}</span>` : ''}
-            <strong style="color:#e74c3c;">${formatCurrency(product.price)}</strong>
-            ${product.originalPrice > product.price ? `<span class="discount-badge" style="background:#e74c3c;color:white;padding:2px 10px;border-radius:20px;font-size:0.9rem;margin-left:10px;">-${Math.round((1 - product.price/product.originalPrice) * 100)}%</span>` : ''}
+        <div class="category"><i class="fas fa-tag"></i> ${product.category || 'Không có danh mục'}</div>
+        <div class="description">${product.description || ''}</div>
+        <div class="price-box">
+            ${product.originalPrice > product.price ? `<span class="original">${formatCurrency(product.originalPrice)}</span>` : ''}
+            <span>${formatCurrency(product.price)}</span>
+            ${product.originalPrice > product.price ? `<span class="discount-badge">-${Math.round((1 - product.price/product.originalPrice) * 100)}%</span>` : ''}
         </div>
-        <div>${product.stock === 0 ? '🛒 Cần đặt trước' : `Còn ${product.stock} sản phẩm`}</div>
+        <div class="product-stock ${product.stock === 0 ? 'out-of-stock' : ''}">
+            <i class="fas ${product.stock === 0 ? 'fa-clock' : 'fa-check-circle'}"></i>
+            ${product.stock === 0 ? 'Cần đặt trước' : `Còn ${product.stock} sản phẩm`}
+        </div>
         <div class="thumbnails">
             ${(product.images || []).map(img => `<img src="${img}" alt="ảnh phụ" onerror="this.style.display='none'" onclick="document.querySelector('.detail-img').src = this.src">`).join('')}
         </div>
-        <button onclick="window.location.href='tel:0913326354'" style="margin-top:15px;padding:10px 20px;background:#25D366;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;"><i class="fab fa-whatsapp"></i> Gọi ngay</button>
-        <button onclick="window.location.href='https://www.facebook.com/phuong.doan.9619934'" style="margin-top:15px;margin-left:10px;padding:10px 20px;background:#1877f2;color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;"><i class="fab fa-facebook"></i> Nhắn tin</button>
+        <div class="modal-actions">
+            <a href="tel:0913326354" class="btn-contact btn-phone"><i class="fas fa-phone"></i> Gọi ngay</a>
+            <a href="https://www.facebook.com/phuong.doan.9619934" target="_blank" class="btn-contact btn-fb"><i class="fab fa-facebook"></i> Nhắn tin</a>
+        </div>
     `;
     modalBody.innerHTML = html;
     modal.style.display = 'flex';
